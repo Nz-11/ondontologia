@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  body { margin:0; background:#f3f6f9; color:#123c52; font-family:'Instrument Sans','Helvetica Neue',Arial,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  a { color:#1f6f8b; text-decoration:none; }
+  a:hover { color:#2f9d97; }
+  * { box-sizing:border-box; }
+  @keyframes ovFloat { 0%,100% { transform:translate3d(0,0,0) } 50% { transform:translate3d(0,-18px,0) } }
+  @keyframes ovDrift { 0% { transform:translate3d(0,0,0) scale(1) } 50% { transform:translate3d(4%,-6%,0) scale(1.12) } 100% { transform:translate3d(0,0,0) scale(1) } }
+  @keyframes ovSpin { to { transform:rotate(360deg) } }
+  @keyframes ovSheen { 0% { transform:translate3d(-60%,0,0) rotate(12deg) } 100% { transform:translate3d(160%,0,0) rotate(12deg) } }
+  @keyframes ovPulse { 0%,100% { opacity:.25 } 50% { opacity:.6 } }
+</style>
+<style data-mobile>
+  html { -webkit-text-size-adjust:100%; }
+  html, body { max-width:100%; overflow-x:hidden; }
+  @media (max-width:640px) {
+    body { padding-bottom:88px; }
+    [style*="max-width:1280px"] { padding:10px 12px 0 !important; }
+
+    /* nav: logo + botão apenas */
+    nav { padding:8px 8px 8px 12px !important; gap:10px !important; }
+    nav a[href^="#"]:not(:first-child), nav > div > a[href^="#"] { display:none !important; }
+    nav > a span { font-size:17px !important; }
+    nav a[target="_blank"] { height:40px !important; padding:0 16px !important; font-size:14px !important; }
+
+    /* grids em coluna única (evita estouro lateral) */
+    [style*="grid-template-columns"] { grid-template-columns:minmax(0,1fr) !important; }
+    [style*="minmax(210px"] { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
+
+    /* hero */
+    header[data-hero], section[style*="border-radius:34px"] { border-radius:24px !important; }
+    [data-hero] [style*="grid-template-columns"] { padding:26px 18px 30px !important; gap:26px !important; }
+    [data-hero] h1 { font-size:36px !important; max-width:none !important; }
+    [data-hero] a[data-magnetic], [data-hero] a[href="#oferta"] { width:100% !important; height:54px !important; }
+    [data-hero-art] { min-height:280px !important; }
+    [data-badge] { left:-6px !important; bottom:-14px !important; width:96px !important; height:96px !important; }
+    [data-badge] span { font-size:22px !important; }
+
+    /* seções */
+    section { padding-left:4px !important; padding-right:4px !important; }
+    section[style*="border-radius:34px"] { padding-left:20px !important; padding-right:20px !important; }
+    section h2 { max-width:none !important; }
+    [style*="minmax(268px"] > div, [style*="minmax(290px"] > div, [style*="minmax(280px"] > div { padding:20px !important; }
+    [style*="minmax(210px"] > div { padding:18px 16px !important; }
+    [style*="minmax(210px"] > div > div:first-child { font-size:30px !important; }
+
+    /* preço */
+    div[style*="justify-content:space-between;gap:16px"] { flex-direction:column !important; align-items:flex-start !important; gap:4px !important; }
+    div[style*="justify-content:space-between;gap:16px"] strong { text-align:left !important; }
+    section a[style*="height:54px"], section a[style*="height:50px"], section a[style*="height:58px"] { width:100% !important; text-align:center !important; height:auto !important; min-height:52px !important; padding:12px 20px !important; }
+
+    /* FAQ */
+    [data-acc-btn] { font-size:17px !important; padding:18px 18px !important; }
+    [data-acc-panel] { padding:0 18px 20px !important; font-size:15.5px !important; }
+
+    /* CTA final e rodapé */
+    footer { flex-direction:column !important; align-items:flex-start !important; }
+
+    /* botão flutuante em barra inferior */
+    a[style*="position:fixed"] { left:12px !important; right:12px !important; bottom:12px !important; height:52px !important; justify-content:center !important; font-size:16px !important; }
+  }
+</style>
+
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#5f97d3">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#5f97d3"></rect>
+    <circle cx="900" cy="620" r="70" fill="#d9f14e"></circle>
+    <path d="M600 200c-70 0-120 46-120 116 0 96 44 176 76 244 14 30 58 30 66-4l18-74 18 74c8 34 52 34 66 4 32-68 76-148 76-244 0-70-50-116-120-116-24 0-40 10-40 10s-16-10-40-10z" fill="#ffffff"></path>
+    <path d="M492 428c60 36 216 36 276-16" stroke="#2f9d97" stroke-width="22" fill="none" stroke-linecap="round"></path>
+  </svg>
+</template>
+
+<div style="max-width:1280px;margin:0 auto;padding:18px clamp(14px,3vw,28px) 0;">
+
+  <nav style="position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px 10px 14px;background:rgba(243,246,249,.86);backdrop-filter:blur(10px);border-radius:999px;">
+    <a href="#topo" style="display:flex;align-items:center;gap:10px;min-width:0;">
+      <img src="assets/odontovida-logo.png" alt="OdontoVida" style="width:38px;height:38px;object-fit:contain;flex:0 0 auto;" />
+      <span style="font-family:'Archivo',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em;color:#123c52;white-space:nowrap;">OdontoVida</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.2vw,30px);">
+      <a href="#dor" style="font-size:14.5px;color:#123c52;opacity:.75;">Para quem é</a>
+      <a href="#beneficios" style="font-size:14.5px;color:#123c52;opacity:.75;">Benefícios</a>
+      <a href="#oferta" style="font-size:14.5px;color:#123c52;opacity:.75;">Como funciona</a>
+      <a href="#faq" style="font-size:14.5px;color:#123c52;opacity:.75;">Dúvidas</a>
+      <a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=nav" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border-radius:999px;background:#123c52;color:#fff;font-weight:600;font-size:14.5px;white-space:nowrap;">Falar no WhatsApp</a>
+    </div>
+  </nav>
+
+  <header id="topo" data-hero style="position:relative;margin-top:14px;border-radius:34px;overflow:hidden;background:#5f97d3;color:#fff;isolation:isolate;">
+    <div data-depth="34" style="position:absolute;inset:-22%;z-index:0;pointer-events:none;will-change:transform;">
+      <div style="position:absolute;inset:0;background:radial-gradient(42% 46% at 22% 30%, rgba(255,255,255,.6) 0%, rgba(255,255,255,0) 70%);animation:ovDrift 17s ease-in-out infinite;"></div>
+    </div>
+    <div data-depth="-46" style="position:absolute;inset:-28%;z-index:0;pointer-events:none;will-change:transform;">
+      <div style="position:absolute;inset:0;background:radial-gradient(38% 40% at 78% 70%, rgba(47,157,151,.6) 0%, rgba(47,157,151,0) 72%);animation:ovDrift 23s ease-in-out infinite reverse;"></div>
+    </div>
+    <div data-depth="18" style="position:absolute;inset:-30%;z-index:0;pointer-events:none;opacity:.34;mix-blend-mode:soft-light;will-change:transform;">
+      <div style="position:absolute;inset:0;background:conic-gradient(from 0deg at 62% 46%, rgba(217,241,78,.0) 0deg, rgba(217,241,78,.85) 70deg, rgba(255,255,255,0) 150deg, rgba(47,157,151,.7) 250deg, rgba(217,241,78,0) 360deg);animation:ovSpin 34s linear infinite;"></div>
+    </div>
+    <div data-hero-cursor style="position:absolute;width:520px;height:520px;left:0;top:0;margin:-260px 0 0 -260px;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle, rgba(255,255,255,.42) 0%, rgba(255,255,255,.12) 42%, rgba(255,255,255,0) 70%);transition:opacity .6s ease;will-change:transform;"></div>
+    <div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);background-size:64px 64px;mask-image:radial-gradient(72% 62% at 50% 46%, #000 0%, transparent 78%);-webkit-mask-image:radial-gradient(72% 62% at 50% 46%, #000 0%, transparent 78%);"></div>
+    <div data-hero-sheen style="position:absolute;top:0;bottom:0;left:0;width:38%;z-index:2;pointer-events:none;background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 50%, rgba(255,255,255,0) 100%);animation:ovSheen 11s cubic-bezier(.5,0,.2,1) infinite;"></div>
+
+    <div style="position:relative;z-index:3;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(20px,3vw,40px);padding:clamp(28px,4.4vw,60px) clamp(22px,3.6vw,56px) clamp(28px,3.6vw,48px);align-items:center;">
+      <div data-depth="12" style="min-width:0;will-change:transform;">
+        <span data-reveal style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.2);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;">Clínica odontológica · São Paulo</span>
+        <h1 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(38px,5.6vw,76px);line-height:.98;letter-spacing:-.035em;margin:clamp(16px,2vw,24px) 0 0;max-width:14ch;text-wrap:balance;"><span data-reveal style="display:inline-block;">Cuide do seu sorriso</span> <span data-reveal style="display:inline-block;">sem dor e sem susto</span> <span data-reveal style="display:inline-block;">no orçamento</span></h1>
+        <p data-reveal style="margin:clamp(16px,2vw,22px) 0 0;max-width:44ch;font-size:clamp(16px,1.2vw,18.5px);line-height:1.55;color:rgba(255,255,255,.92);text-wrap:pretty;">Atendimento humanizado pra quem adia o dentista há anos — com avaliação, raio-x e orçamento sem compromisso.</p>
+        <div data-reveal style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:clamp(22px,2.6vw,32px);">
+          <a data-magnetic href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=hero" target="_blank" rel="noopener" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 30px;border-radius:999px;background:#d9f14e;color:#123c52;font-weight:600;font-size:17px;letter-spacing:-.01em;will-change:transform;">Agendar minha avaliação</a>
+          <a href="#oferta" style="display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 26px;border-radius:999px;border:1px solid rgba(255,255,255,.55);color:#fff;font-weight:500;font-size:16px;">Ver como funciona</a>
+        </div>
+        <p data-reveal style="margin:14px 0 0;font-size:13.5px;color:rgba(255,255,255,.85);">Avaliação com raio-x incluso &nbsp;·&nbsp; Sem compromisso</p>
+
+        <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(26px,3vw,38px);padding:14px 18px 14px 14px;border-radius:22px;background:rgba(255,255,255,.96);width:max-content;max-width:100%;box-shadow:0 16px 40px rgba(18,60,82,.18);">
+          <image-slot id="ov-paciente" shape="circle" style="width:56px;height:56px;flex:0 0 auto;" placeholder="Foto paciente"></image-slot>
+          <div style="min-width:0;">
+            <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:26px;line-height:1;color:#1f6f8b;">98%</div>
+            <div style="font-size:13px;line-height:1.35;color:#123c52;opacity:.72;">dos pacientes voltam<br />para o tratamento</div>
+          </div>
+        </div>
+      </div>
+
+      <div data-hero-art style="position:relative;min-width:0;min-height:clamp(300px,38vw,470px);perspective:1200px;will-change:transform;">
+        <div data-hero-tilt style="position:absolute;inset:0;border-radius:28px;transform-style:preserve-3d;will-change:transform;">
+          <image-slot id="ov-hero" shape="rounded" radius="28" placeholder="Foto do hero — paciente sorrindo ou consultório"></image-slot>
+          <div data-hero-gloss style="position:absolute;inset:0;border-radius:28px;pointer-events:none;opacity:0;background:radial-gradient(60% 60% at 50% 50%, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 70%);transition:opacity .5s ease;"></div>
+          <div style="position:absolute;inset:0;border-radius:28px;pointer-events:none;border:1px solid rgba(255,255,255,.38);"></div>
+        </div>
+        <div data-depth="-70" data-badge style="position:absolute;left:-18px;bottom:-18px;width:clamp(110px,11vw,140px);height:clamp(110px,11vw,140px);border-radius:50%;background:#d9f14e;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px rgba(18,60,82,.28);will-change:transform;">
+          <svg viewBox="0 0 120 120" style="position:absolute;inset:0;width:100%;height:100%;animation:ovSpin 18s linear infinite;">
+            <defs><path id="ovRing" d="M60,60 m-43,0 a43,43 0 1,1 86,0 a43,43 0 1,1 -86,0" fill="none"></path></defs>
+            <text style="font-size:11px;letter-spacing:.18em;fill:#123c52;font-family:'Instrument Sans',sans-serif;font-weight:600;"><textPath href="#ovRing">AGENDE SUA AVALIAÇÃO · RAIO-X INCLUSO · </textPath></text>
+          </svg>
+          <span style="position:relative;font-size:26px;line-height:1;color:#123c52;">↗</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section style="padding:clamp(64px,8vw,110px) clamp(6px,2vw,20px) clamp(40px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(24px,4vw,64px);align-items:start;">
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.04;letter-spacing:-.03em;margin:0;max-width:16ch;text-wrap:balance;">Todo mundo sabe que precisa ir ao dentista. Poucos vão.</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:52ch;font-size:clamp(16px,1.15vw,18px);line-height:1.6;color:rgba(18,60,82,.78);">
+      <p style="margin:0;">Não porque não querem cuidar dos dentes. Porque têm medo de doer, medo do orçamento vir gigante, ou vergonha de mostrar o sorriso que evitaram por anos.</p>
+      <p style="margin:0;">Aqui é diferente. Você é recebido, ouvido, e sai da primeira consulta sabendo exatamente o que precisa — sem pressão pra fechar tratamento na hora.</p>
+      <p style="margin:0;color:#123c52;font-weight:500;">O primeiro passo é simples: uma avaliação completa, com raio-x e diagnóstico, pra você decidir com calma.</p>
+    </div>
+  </section>
+
+  <section id="dor" style="padding:clamp(36px,5vw,60px) clamp(6px,2vw,20px);">
+    <p style="margin:0 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#2f9d97;">Para quem é</p>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(27px,3vw,42px);line-height:1.08;letter-spacing:-.03em;margin:0 0 clamp(24px,3vw,40px);max-width:24ch;">Se você se identifica com algum desses pontos, essa página é pra você</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:14px;">
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Você adia o dentista há meses (ou anos) por medo de doer</div>
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Já foi em clínica que "empurrou" tratamento caro sem explicar direito</div>
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Tem vergonha de abrir o sorriso em fotos</div>
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Não sabe se tem dinheiro pra pagar o tratamento — e isso te trava até de marcar a avaliação</div>
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Sente que sempre falta tempo pra cuidar disso</div>
+      <div style="padding:24px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);font-size:16px;line-height:1.5;">Já teve uma experiência ruim que te afastou do dentista</div>
+    </div>
+  </section>
+
+  <section style="margin-top:clamp(48px,6vw,84px);border-radius:34px;background:#123c52;color:#fff;padding:clamp(30px,4vw,60px) clamp(22px,3.4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(24px,3.4vw,52px);align-items:center;">
+    <div style="min-width:0;">
+      <p style="margin:0 0 10px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#d9f14e;">O método</p>
+      <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(30px,3.6vw,50px);line-height:1.04;letter-spacing:-.03em;margin:0 0 20px;max-width:16ch;">Avaliação Sem Susto</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:50ch;font-size:clamp(15.5px,1.1vw,17.5px);line-height:1.6;color:rgba(255,255,255,.82);">
+        <p style="margin:0;">Você passa por um diagnóstico completo, com raio-x e explicação detalhada de cada ponto — antes de qualquer decisão sobre tratamento.</p>
+        <p style="margin:0;">Sem letra miúda, sem pressão, sem orçamento genérico. Você entende exatamente o que precisa e escolhe com calma, no seu tempo.</p>
+        <p style="margin:0;">Para quem tem medo ou ansiedade, oferecemos atendimento com foco em conforto, do primeiro contato até o procedimento.</p>
+      </div>
+    </div>
+    <div style="position:relative;min-height:clamp(240px,26vw,360px);min-width:0;">
+      <image-slot id="ov-consultorio" shape="rounded" radius="26" placeholder="Foto do consultório ou da equipe"></image-slot>
+    </div>
+  </section>
+
+  <section id="beneficios" style="padding:clamp(56px,7vw,100px) clamp(6px,2vw,20px) clamp(36px,4vw,56px);">
+    <p style="margin:0 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#2f9d97;">Benefícios</p>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(27px,3vw,42px);line-height:1.08;letter-spacing:-.03em;margin:0 0 clamp(24px,3vw,40px);max-width:20ch;">O que muda quando você marca a avaliação</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;">
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Raio-x incluso na avaliação</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.72);">Você sai sabendo o real estado da sua boca, sem custo escondido.</p>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Diagnóstico em linguagem simples</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.72);">Você entende o que está pagando e por quê.</p>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Atendimento com foco em conforto</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.72);">Você não precisa mais adiar por medo.</p>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Parcelamento facilitado</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.72);">O tratamento cabe no seu bolso, sem comprometer o mês.</p>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Equipe especializada</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.72);">Você é tratado por quem realmente entende do seu caso.</p>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#d9f14e;border:1px solid rgba(18,60,82,.08);">
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0 0 8px;">Sem pressão de venda</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:rgba(18,60,82,.78);">Você decide no seu tempo, sem empurroterapia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:clamp(28px,4vw,52px) clamp(6px,2vw,20px);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:14px;">
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(32px,3.4vw,46px);line-height:1;color:#1f6f8b;">+12.400</div>
+        <div style="margin-top:6px;font-size:14.5px;color:rgba(18,60,82,.7);">pacientes atendidos</div>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(32px,3.4vw,46px);line-height:1;color:#1f6f8b;">18 anos</div>
+        <div style="margin-top:6px;font-size:14.5px;color:rgba(18,60,82,.7);">cuidando de sorrisos em São Paulo</div>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#fff;border:1px solid rgba(18,60,82,.08);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(32px,3.4vw,46px);line-height:1;color:#1f6f8b;">4,9 / 5</div>
+        <div style="margin-top:6px;font-size:14.5px;color:rgba(18,60,82,.7);">média das avaliações no Google</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
+      <div style="padding:26px;border-radius:22px;background:#e8eff7;border:1px solid rgba(18,60,82,.08);">
+        <p style="margin:0 0 16px;font-size:16.5px;line-height:1.55;">"Fiz o implante que adiei por 5 anos e não senti dor nenhuma. Saí de lá sabendo cada valor."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <image-slot id="ov-dep1" shape="circle" style="width:44px;height:44px;flex:0 0 auto;" placeholder="Foto"></image-slot>
+          <div style="font-size:14px;color:rgba(18,60,82,.72);">Marcelo, 42 anos<br />Implante unitário</div>
+        </div>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#e8eff7;border:1px solid rgba(18,60,82,.08);">
+        <p style="margin:0 0 16px;font-size:16.5px;line-height:1.55;">"Tenho pavor de dentista desde criança. Foi a primeira vez que terminei uma consulta tranquila."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <image-slot id="ov-dep2" shape="circle" style="width:44px;height:44px;flex:0 0 auto;" placeholder="Foto"></image-slot>
+          <div style="font-size:14px;color:rgba(18,60,82,.72);">Juliana, 34 anos<br />Limpeza e restaurações</div>
+        </div>
+      </div>
+      <div style="padding:26px;border-radius:22px;background:#e8eff7;border:1px solid rgba(18,60,82,.08);">
+        <p style="margin:0 0 16px;font-size:16.5px;line-height:1.55;">"O orçamento veio por escrito e parcelado. Consegui começar no mesmo mês, sem apertar as contas."</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <image-slot id="ov-dep3" shape="circle" style="width:44px;height:44px;flex:0 0 auto;" placeholder="Foto"></image-slot>
+          <div style="font-size:14px;color:rgba(18,60,82,.72);">Renata, 51 anos<br />Prótese e clareamento</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin:14px 0 0;font-size:12.5px;line-height:1.5;color:rgba(18,60,82,.5);max-width:70ch;">Números e depoimentos acima são exemplos de preenchimento — substitua por dados reais da clínica antes de publicar.</p>
+  </section>
+
+  <section id="oferta" style="margin-top:clamp(40px,5vw,72px);border-radius:34px;background:#6a9fd8;color:#fff;padding:clamp(30px,4vw,60px) clamp(22px,3.4vw,56px);">
+    <p style="margin:0 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#123c52;">Como funciona</p>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(28px,3.4vw,46px);line-height:1.05;letter-spacing:-.03em;margin:0 0 clamp(24px,3vw,38px);max-width:18ch;">Quatro passos até o seu diagnóstico</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
+      <div style="padding:24px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;color:#d9f14e;margin-bottom:10px;">01</div>
+        <p style="margin:0;font-size:16px;line-height:1.5;">Você agenda pelo WhatsApp, no horário que couber na sua rotina.</p>
+      </div>
+      <div style="padding:24px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;color:#d9f14e;margin-bottom:10px;">02</div>
+        <p style="margin:0;font-size:16px;line-height:1.5;">Vem pra avaliação com raio-x incluso, sem custo escondido.</p>
+      </div>
+      <div style="padding:24px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;color:#d9f14e;margin-bottom:10px;">03</div>
+        <p style="margin:0;font-size:16px;line-height:1.5;">Recebe o diagnóstico explicado e o orçamento, sem compromisso.</p>
+      </div>
+      <div style="padding:24px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);">
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;color:#d9f14e;margin-bottom:10px;">04</div>
+        <p style="margin:0;font-size:16px;line-height:1.5;">Decide o tratamento no seu tempo, com opções de parcelamento.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(20px,3vw,40px);align-items:center;margin-top:clamp(24px,3vw,38px);padding:clamp(22px,2.6vw,34px);border-radius:26px;background:#fff;color:#123c52;">
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0;">
+        <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(18,60,82,.12);">
+          <span style="font-size:15px;color:rgba(18,60,82,.7);">Avaliação completa com raio-x</span>
+          <strong style="font-family:'Archivo',sans-serif;font-size:19px;white-space:nowrap;">R$ 49</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(18,60,82,.12);">
+          <span style="font-size:15px;color:rgba(18,60,82,.7);">Tratamentos</span>
+          <strong style="font-family:'Archivo',sans-serif;font-size:19px;text-align:right;">orçamento sob medida</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:16px;">
+          <span style="font-size:15px;color:rgba(18,60,82,.7);">Pagamento</span>
+          <strong style="font-family:'Archivo',sans-serif;font-size:19px;text-align:right;">cartão parcelado ou PIX com desconto</strong>
+        </div>
+      </div>
+      <div style="min-width:0;">
+        <p style="margin:0 0 18px;font-size:16.5px;line-height:1.55;">O custo de continuar adiando é maior do que parece — dor que piora, tratamento que fica mais caro, sorriso que você continua escondendo.</p>
+        <a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=oferta" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;height:54px;padding:0 28px;border-radius:999px;background:#123c52;color:#fff;font-weight:600;font-size:16.5px;">Quero saber o que meu dente precisa</a>
+      </div>
+    </div>
+  </section>
+
+  <section onClick="{{ onAccordion }}" style="padding:clamp(56px,7vw,100px) clamp(6px,2vw,20px) clamp(24px,3vw,40px);">
+    <p style="margin:0 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#2f9d97;">O que costuma travar</p>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(27px,3vw,42px);line-height:1.08;letter-spacing:-.03em;margin:0 0 clamp(20px,2.6vw,34px);max-width:18ch;">"Mas..." — respondendo de frente</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:900px;">
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Mas vai doer...<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Trabalhamos com foco em conforto do início ao fim. Muitos pacientes que tinham pavor de dentista relatam que a experiência foi bem mais tranquila do que imaginavam.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Mas não tenho dinheiro agora...<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Por isso a avaliação vem antes de qualquer decisão. Você sabe o valor exato e escolhe como pagar — com parcelamento que cabe no seu mês.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Mas não tenho tempo...<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">A avaliação é rápida e o agendamento é flexível. O tempo que você "economiza" adiando custa mais caro depois.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Mas já fui empurrado a fechar tratamento caro antes...<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Aqui você recebe o diagnóstico completo e decide sem pressão. Ninguém fecha nada na sua primeira visita se você não quiser.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Mas tenho vergonha do meu sorriso...<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">É exatamente por isso que existimos. Você é recebido sem julgamento — só cuidado.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:clamp(24px,3vw,40px) clamp(6px,2vw,20px);display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;">
+    <div style="padding:clamp(26px,3vw,40px);border-radius:26px;background:#e8eff7;border:1px solid rgba(18,60,82,.08);">
+      <p style="margin:0 0 10px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#2f9d97;">Garantia</p>
+      <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(22px,2.2vw,30px);letter-spacing:-.025em;margin:0 0 12px;">Nada avança sem a sua aprovação</h3>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Diagnóstico transparente, orçamento por escrito e sem compromisso. Você só avança pro tratamento quando entender e aprovar cada etapa. Suporte da equipe do início ao fim do processo.</p>
+    </div>
+    <div style="position:relative;padding:clamp(26px,3vw,40px);border-radius:26px;background:#d9f14e;overflow:hidden;">
+      <div style="position:absolute;inset:-30%;background:radial-gradient(40% 40% at 70% 30%, rgba(255,255,255,.7) 0%, rgba(255,255,255,0) 70%);animation:ovPulse 6s ease-in-out infinite;pointer-events:none;"></div>
+      <div style="position:relative;">
+        <p style="margin:0 0 10px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:rgba(18,60,82,.7);">Agenda</p>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(22px,2.2vw,30px);letter-spacing:-.025em;margin:0 0 12px;">Vagas de avaliação limitadas por semana</h3>
+        <p style="margin:0 0 18px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.8);">A agenda de primeiras avaliações é reduzida para manter o tempo de consulta longo e sem corrida. Confirme sua semana pelo WhatsApp.</p>
+        <a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=urgencia" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;height:50px;padding:0 26px;border-radius:999px;background:#123c52;color:#fff;font-weight:600;font-size:16px;">Ver horários desta semana</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" onClick="{{ onAccordion }}" style="padding:clamp(56px,7vw,96px) clamp(6px,2vw,20px) clamp(24px,3vw,40px);">
+    <p style="margin:0 0 8px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#2f9d97;">Dúvidas frequentes</p>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(27px,3vw,42px);line-height:1.08;letter-spacing:-.03em;margin:0 0 clamp(20px,2.6vw,34px);max-width:16ch;">Antes de marcar, o que perguntam</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:900px;">
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">A avaliação realmente não tem compromisso?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Não. Você recebe o diagnóstico e o orçamento e decide no seu tempo.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Dói fazer o raio-x ou a avaliação?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Não, é um procedimento rápido e indolor.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Vocês atendem quem tem muito medo de dentista?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Sim, é uma das nossas especialidades — trabalhamos com foco em conforto pra pacientes ansiosos.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Quais formas de pagamento vocês aceitam?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Cartão parcelado em até 12x e PIX com desconto. Confirme convênios atendidos pelo WhatsApp.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Quanto tempo demora o tratamento?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Depende do diagnóstico — isso fica claro logo na avaliação.</div>
+      </div>
+      <div data-acc style="border-radius:20px;background:#fff;border:1px solid rgba(18,60,82,.08);overflow:hidden;">
+        <button data-acc-btn type="button" style="all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#123c52;">Preciso levar algum documento ou exame?<span data-acc-ico style="font-size:22px;line-height:1;color:#2f9d97;transition:transform .3s;">+</span></button>
+        <div data-acc-panel style="display:none;padding:0 24px 22px;font-size:16px;line-height:1.6;color:rgba(18,60,82,.75);">Documento com foto e, se tiver, exames ou raio-x recentes de outra clínica.</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:clamp(40px,5vw,72px);border-radius:34px;background:#123c52;color:#fff;padding:clamp(40px,5.4vw,84px) clamp(22px,3.4vw,56px);text-align:center;">
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(32px,4.4vw,62px);line-height:1.02;letter-spacing:-.035em;margin:0 auto;max-width:16ch;text-wrap:balance;">Seu sorriso não precisa esperar mais</h2>
+    <p style="margin:20px auto 0;max-width:50ch;font-size:clamp(16px,1.2vw,18.5px);line-height:1.55;color:rgba(255,255,255,.82);">O primeiro passo é só marcar uma avaliação — sem dor, sem susto, sem pressão.</p>
+    <div style="display:flex;justify-content:center;margin-top:30px;">
+      <a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=cta-final" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;height:58px;padding:0 34px;border-radius:999px;background:#d9f14e;color:#123c52;font-weight:600;font-size:17.5px;">Agendar minha avaliação agora</a>
+    </div>
+    <p style="margin:28px auto 0;max-width:62ch;font-size:15px;line-height:1.6;color:rgba(255,255,255,.66);text-align:left;"><strong style="color:#d9f14e;font-weight:600;">PS:</strong> Quanto mais você adia, mais complicado (e caro) o tratamento tende a ficar. A avaliação é rápida, sem compromisso e o primeiro passo pra parar de esconder o sorriso. Fale agora no WhatsApp e marque seu horário.</p>
+  </section>
+
+  <footer style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:clamp(28px,3.4vw,44px) clamp(6px,2vw,20px) 40px;font-size:13.5px;color:rgba(18,60,82,.6);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="assets/odontovida-logo.png" alt="OdontoVida" style="width:30px;height:30px;object-fit:contain;" />
+      <span>OdontoVida · Clínica Odontológica · São Paulo</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:18px;">
+      <a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=rodape" target="_blank" rel="noopener">(11) 99999-9999</a>
+      <a href="#topo">Política de privacidade</a>
+    </div>
+  </footer>
+</div>
+
+<a href="https://wa.me/5511999999999?utm_source=lp&amp;utm_medium=flutuante" target="_blank" rel="noopener" style="position:fixed;right:18px;bottom:18px;z-index:80;display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 24px;border-radius:999px;background:#d9f14e;color:#123c52;font-weight:600;font-size:15.5px;box-shadow:0 12px 30px rgba(18,60,82,.24);">Agendar avaliação</a>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  componentDidMount() {
+    this._raf = 0;
+    this._boot = setTimeout(() => this.initHero(), 60);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._boot);
+    cancelAnimationFrame(this._raf);
+    if (this._off) this._off();
+  }
+
+  initHero() {
+    const hero = document.querySelector("[data-hero]");
+    if (!hero) { this._boot = setTimeout(() => this.initHero(), 200); return; }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Entrance: staggered rise + de-blur, driven by the Web Animations API so it
+    // survives re-renders and never fights the parallax transforms below.
+    const reveals = hero.querySelectorAll("[data-reveal]");
+    reveals.forEach((el, i) => {
+      if (reduced) return;
+      el.animate(
+        [
+          { opacity: 0, transform: "translate3d(0,26px,0)", filter: "blur(10px)" },
+          { opacity: 1, transform: "translate3d(0,0,0)", filter: "blur(0px)" }
+        ],
+        { duration: 900, delay: 90 * i, easing: "cubic-bezier(.22,.9,.3,1)", fill: "backwards" }
+      );
+    });
+    const art = hero.querySelector("[data-hero-art]");
+    if (art && !reduced) {
+      art.animate(
+        [
+          { opacity: 0, transform: "translate3d(0,40px,0) scale(.96)" },
+          { opacity: 1, transform: "translate3d(0,0,0) scale(1)" }
+        ],
+        { duration: 1100, delay: 160, easing: "cubic-bezier(.22,.9,.3,1)", fill: "backwards" }
+      );
+    }
+    if (reduced) return;
+
+    const layers = [].slice.call(hero.querySelectorAll("[data-depth]")).map(el => ({
+      el, d: parseFloat(el.getAttribute("data-depth")) || 0
+    }));
+    const tilt = hero.querySelector("[data-hero-tilt]");
+    const gloss = hero.querySelector("[data-hero-gloss]");
+    const cursor = hero.querySelector("[data-hero-cursor]");
+    const magnet = hero.querySelector("[data-magnetic]");
+
+    // Targets vs. eased actuals — the lerp is what turns a twitchy mouse feed
+    // into weighted, filmic motion.
+    const t = { x: 0, y: 0, cx: 0, cy: 0, scroll: 0, in: 0 };
+    const a = { x: 0, y: 0, cx: 0, cy: 0, scroll: 0, in: 0 };
+    let mx = 0, my = 0, magX = 0, magY = 0, magTX = 0, magTY = 0;
+
+    const onMove = (e) => {
+      const r = hero.getBoundingClientRect();
+      t.cx = e.clientX - r.left;
+      t.cy = e.clientY - r.top;
+      t.x = (t.cx / r.width) * 2 - 1;
+      t.y = (t.cy / r.height) * 2 - 1;
+      t.in = 1;
+      if (magnet) {
+        const m = magnet.getBoundingClientRect();
+        const dx = e.clientX - (m.left + m.width / 2);
+        const dy = e.clientY - (m.top + m.height / 2);
+        const dist = Math.hypot(dx, dy);
+        const pull = dist < 170 ? 1 - dist / 170 : 0;
+        magTX = dx * 0.28 * pull;
+        magTY = dy * 0.28 * pull;
+      }
+    };
+    const onLeave = () => { t.x = 0; t.y = 0; t.in = 0; magTX = 0; magTY = 0; };
+    const onScroll = () => {
+      const r = hero.getBoundingClientRect();
+      t.scroll = Math.max(0, Math.min(1, -r.top / (r.height || 1)));
+    };
+
+    hero.addEventListener("pointermove", onMove);
+    hero.addEventListener("pointerleave", onLeave);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    const lerp = (c, n, f) => c + (n - c) * f;
+    const loop = () => {
+      a.x = lerp(a.x, t.x, 0.07);
+      a.y = lerp(a.y, t.y, 0.07);
+      a.cx = lerp(a.cx, t.cx, 0.12);
+      a.cy = lerp(a.cy, t.cy, 0.12);
+      a.in = lerp(a.in, t.in, 0.08);
+      a.scroll = lerp(a.scroll, t.scroll, 0.1);
+
+      layers.forEach(l => {
+        l.el.style.transform =
+          "translate3d(" + (a.x * l.d).toFixed(2) + "px," +
+          (a.y * l.d * 0.62 - a.scroll * l.d * 0.9).toFixed(2) + "px,0)";
+      });
+      if (tilt) {
+        tilt.style.transform =
+          "rotateY(" + (a.x * 5).toFixed(2) + "deg) rotateX(" + (-a.y * 4).toFixed(2) +
+          "deg) translate3d(" + (a.x * 10).toFixed(2) + "px," + (a.y * 8 - a.scroll * 26).toFixed(2) + "px,0)";
+      }
+      if (gloss) gloss.style.opacity = (a.in * 0.9).toFixed(3);
+      if (cursor) {
+        cursor.style.opacity = (a.in * 0.85).toFixed(3);
+        cursor.style.transform = "translate3d(" + a.cx.toFixed(1) + "px," + a.cy.toFixed(1) + "px,0)";
+      }
+      if (magnet) {
+        magX = lerp(magX, magTX, 0.14);
+        magY = lerp(magY, magTY, 0.14);
+        magnet.style.transform = "translate3d(" + magX.toFixed(2) + "px," + magY.toFixed(2) + "px,0)";
+      }
+      mx = a.x; my = a.y;
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+
+    this._off = () => {
+      hero.removeEventListener("pointermove", onMove);
+      hero.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }
+
+  renderVals() {
+    return {
+      onAccordion: (e) => {
+        const btn = e.target.closest("[data-acc-btn]");
+        if (!btn) return;
+        const item = btn.closest("[data-acc]");
+        const panel = item.querySelector("[data-acc-panel]");
+        const ico = item.querySelector("[data-acc-ico]");
+        const open = panel.style.display !== "none";
+        panel.style.display = open ? "none" : "block";
+        if (ico) ico.style.transform = open ? "rotate(0deg)" : "rotate(45deg)";
+        item.style.borderColor = open ? "rgba(18,60,82,.08)" : "rgba(47,157,151,.45)";
+      }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
